@@ -9,6 +9,9 @@
       state: "restarted"
 
   tasks:
+  - name: releaseinfo change
+    shell:
+      cmd: apt-get --allow-releaseinfo-change-suite update
 
   - name: install sudo
     apt: 

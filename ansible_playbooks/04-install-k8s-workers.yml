@@ -1,5 +1,6 @@
-- hosts: masters 
+- hosts: workers 
   become: yes
+
   tasks:
     - name: set the swap off
       shell:
@@ -11,19 +12,11 @@
       loop:
         - update-alternatives --set iptables /usr/sbin/iptables-legacy
         - update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy
-    - name: releaseinfo change
-      shell:
-        cmd: apt-get --allow-releaseinfo-change-suite update
 
     - name: install packages with apt
       apt:
-        name: "{{ item }}"
+        name: ['apt-transport-https', 'gnupg2', 'ca-certificates', 'software-properties-common']
         state: present
-      with_items:
-        - apt-transport-https
-        - gnupg2
-        - ca-certificates
-        - software-properties-common
 
     - name: add apt-key for Docker
       apt_key:
@@ -55,17 +48,17 @@
 
     - name: install kubelet
       apt:
-        name: kubelet=1.17.0-00
+        name: kubelet
         state: present
         update_cache: true
 
     - name: install kubeadm
       apt:
-        name: kubeadm=1.17.0-00
+        name: kubeadm
         state: present
 
     - name: install kubectl
       apt:
-        name: kubectl=1.17.0-00
+        name: kubectl
         state: present
         force: yes
